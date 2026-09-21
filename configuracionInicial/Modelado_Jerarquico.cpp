@@ -378,7 +378,7 @@ void Inputs(GLFWwindow* window) {
 		indice_base -= 0.18f;
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
 		indice_extremo += 0.18f;
-	if (glfwGetKey(window, GLFW_KEY_SEMICOLON) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
 		indice_extremo -= 0.18f;
 
 	// Pulgar
