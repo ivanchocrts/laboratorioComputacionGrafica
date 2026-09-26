@@ -1,3 +1,5 @@
+//ACTIVIDAD NOMBRE
+//ENTREGA //NUMERO CUENTA 
 // Std. Includes
 #include <string>
 
@@ -34,7 +36,7 @@ void DoMovement( );
 // Camera
 // Con valores de 0 la camara se situa como si se estuviera dentro del objeto (coordenadas cero para todo)
 //Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
-Camera camera( glm::vec3( 0.0f, 0.0f, 3.0f ) );
+Camera camera( glm::vec3( 0.0f, 2.0f, 7.0f ) );
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
@@ -55,6 +57,7 @@ int main( )
     glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
     glfwWindowHint( GLFW_RESIZABLE, GL_FALSE );
     
+
     // Create a GLFWwindow object that we can use for GLFW's functions
     GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "Practica 6. Carga de modelos y camara sintetica. Ivan Daniel.", nullptr, nullptr );
     
@@ -97,11 +100,41 @@ int main( )
     
     // Load models
     //Entre parentesis la ruta de donde se encuentra el archivo en 3D
-    //Perrito
-    Model dog((char*)"Models/RedDog.obj");
-    
-    //Manzana
+    //mesaJardin
+    Model mesaJardin((char*)"Models/garden_table.obj");
+
+    //arbol
+    Model arbol((char*)"Models/Gledista_Triacanthos_6.obj");
+
+    //manzana
     Model manzana((char*)"Models/Green_Apple_OBJ.obj");
+    
+    //calabaza
+    Model calabaza1((char*)"Models/pumpkin.obj");
+    
+    //perrito1
+    Model perrito1((char*)"Models/RedDog.obj");
+    
+    //silla1
+    Model silla1((char*)"Models/silla.obj");
+
+    //perrito2
+    Model perrito2((char*)"Models/RedDog.obj");
+
+    //pasto
+    Model pasto((char*)"Models/grass.obj");
+    
+    //calabaza.001
+    Model calabaza2((char*)"Models/pumpkin.obj");
+
+    //silla2
+    Model silla2((char*)"Models/silla.obj");
+
+    //vallaBlanca
+    Model valla((char*)"Models/valla.obj");
+
+    //calabaza.002
+    Model calabaza3((char*)"Models/pumpkin.obj");
 
     glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
     
@@ -129,27 +162,89 @@ int main( )
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         // Draw the loaded model
-        //Primer perrito
-        glm::mat4 model1(1.0f);
-        model1 = glm::translate(model1, glm::vec3(-1.5f, 0.0f, 0.0f)); // Separado a la izquierda
-        model1 = glm::scale(model1, glm::vec3(1.0f, 1.0f, 1.0f));      // Escala 1:1
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model1));
-        dog.Draw(shader);
+        // Objeto: mesaJardin
+        glm::mat4 model_mesajardin(1.0f);
+        model_mesajardin = glm::translate(model_mesajardin, glm::vec3(0.0214f, -0.0004f, 2.5f));
+        model_mesajardin = glm::scale(model_mesajardin, glm::vec3(1.000000f, 1.000000f, 1.000000f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_mesajardin));
+        mesaJardin.Draw(shader);
 
-        //Segundo perrito
-        glm::mat4 model2(1.0f); // Iniciamos con matriz identidad limpia
-        model2 = glm::translate(model2, glm::vec3(1.5f, 0.0f, 0.0f));  // X = 1.5, Y = 0.0 (misma altura), Z = -1.0 (profundidad)
-        model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));      // Misma escala que el primero
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model2));
-        dog.Draw(shader);
+        // Objeto: arbol
+        glm::mat4 model_arbol(1.0f);
+        model_arbol = glm::translate(model_arbol, glm::vec3(0.4715f, -0.0496f, -0.4152f));
+        model_arbol = glm::scale(model_arbol, glm::vec3(0.0333f, 0.0186f, 0.0391f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_arbol));
+        arbol.Draw(shader);
 
-        //Modelo extra (manzana)
-        glm::mat4 model3(1.0f); // Iniciamos con matriz identidad limpia
-        model3 = glm::translate(model3, glm::vec3(0.0f, 0.0f, 0.0f));  // X = 1.5, Y = 0.0 (misma altura), Z = -1.0 (profundidad)
-        model3 = glm::scale(model3, glm::vec3(0.01f, 0.01f, 0.01f));      // Misma escala que el primero
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model3));
+        // Objeto: manzana
+        glm::mat4 model_manzana(1.0f);
+        model_manzana = glm::translate(model_manzana, glm::vec3(2.8176f, 0.0090f, 2.6121f));
+        model_manzana = glm::scale(model_manzana, glm::vec3(0.000727f, 0.000727f, 0.000727f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_manzana));
         manzana.Draw(shader);
 
+        // Objeto: calabaza1
+        glm::mat4 model_calabaza(1.0f);
+        model_calabaza = glm::translate(model_calabaza, glm::vec3(0.3006f, -0.0037f, -0.7141f));
+        model_calabaza = glm::scale(model_calabaza, glm::vec3(0.0067f, 0.0100f, 0.0068f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_calabaza));
+        calabaza1.Draw(shader);
+
+        // Objeto: perrito1
+        glm::mat4 model_perrito1(1.0f);
+        model_perrito1 = glm::translate(model_perrito1, glm::vec3(-0.2472f, 0.3703f, 0.7365f));
+        model_perrito1 = glm::scale(model_perrito1, glm::vec3(1.000000f, 1.000000f, 1.000000f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_perrito1));
+        perrito1.Draw(shader);
+
+        // Objeto: silla1
+        glm::mat4 model_silla1(1.0f);
+        model_silla1 = glm::translate(model_silla1, glm::vec3(1.4788f, 0.0157f, -1.0240f));
+        model_silla1 = glm::scale(model_silla1, glm::vec3(0.0495f, 0.0339f, 0.0361f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_silla1));
+        silla1.Draw(shader);
+
+        // Objeto: perrito2
+        glm::mat4 model_perrito2(1.0f);
+        model_perrito2 = glm::translate(model_perrito2, glm::vec3(1.6896f, 0.3592f, 1.9271f));
+        model_perrito2 = glm::scale(model_perrito2, glm::vec3(1.000000f, 1.000000f, 1.000000f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_perrito2));
+        perrito2.Draw(shader);
+
+        // Objeto: pasto
+        glm::mat4 model_pasto(1.0f);
+        model_pasto = glm::translate(model_pasto, glm::vec3(0.0000f, 0.0000f, -0.0000f));
+        model_pasto = glm::scale(model_pasto, glm::vec3(0.010829f, 0.001376f, 0.010579f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_pasto));
+        pasto.Draw(shader);
+
+        // Objeto: calabaza2
+        glm::mat4 model_calabaza_001(1.0f);
+        model_calabaza_001 = glm::translate(model_calabaza_001, glm::vec3(1.0121f, -0.0017f, -0.1457f));
+        model_calabaza_001 = glm::scale(model_calabaza_001, glm::vec3(0.0067f, 0.0100f, 0.0068f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_calabaza_001));
+        calabaza2.Draw(shader);
+
+        // Objeto: silla2
+        glm::mat4 model_silla2(1.0f);
+        model_silla2 = glm::translate(model_silla2, glm::vec3(2.5288f, 0.0145f, -0.5500f));
+        model_silla2 = glm::scale(model_silla2, glm::vec3(0.0495f, 0.0339f, 0.0361f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_silla2));
+        silla2.Draw(shader);
+
+        // Objeto: vallaBlanca
+        glm::mat4 model_vallablanca(1.0f);
+        model_vallablanca = glm::translate(model_vallablanca, glm::vec3(0.2667f, 0.001f, 0.1f));
+        model_vallablanca = glm::scale(model_vallablanca, glm::vec3(1.000000f, 1.000000f, 1.000000f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_vallablanca));
+        valla.Draw(shader);
+
+        // Objeto: calabaza3
+        glm::mat4 model_calabaza_002(1.0f);
+        model_calabaza_002 = glm::translate(model_calabaza_002, glm::vec3(4.7605f, -0.0019f, -1.4147f));
+        model_calabaza_002 = glm::scale(model_calabaza_002, glm::vec3(0.0067f, 0.0100f, 0.0068f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_calabaza_002));
+        calabaza3.Draw(shader);
 
         // Swap the buffers
         glfwSwapBuffers( window );
@@ -207,9 +302,9 @@ void KeyCallback( GLFWwindow *window, int key, int scancode, int action, int mod
         }
     }
 
- 
 
- 
+
+
 }
 
 void MouseCallback( GLFWwindow *window, double xPos, double yPos )
