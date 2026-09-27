@@ -109,7 +109,7 @@ int main( )
     //manzana
     Model manzana((char*)"Models/Green_Apple_OBJ.obj");
     
-    //calabaza
+    //calabaza1
     Model calabaza1((char*)"Models/pumpkin.obj");
     
     //perrito1
@@ -124,7 +124,7 @@ int main( )
     //pasto
     Model pasto((char*)"Models/grass.obj");
     
-    //calabaza.001
+    //calabaza2
     Model calabaza2((char*)"Models/pumpkin.obj");
 
     //silla2
@@ -133,7 +133,7 @@ int main( )
     //vallaBlanca
     Model valla((char*)"Models/valla.obj");
 
-    //calabaza.002
+    //calabaza3
     Model calabaza3((char*)"Models/pumpkin.obj");
 
     glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
