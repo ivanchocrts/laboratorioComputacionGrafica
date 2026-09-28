@@ -1,4 +1,5 @@
-
+//Practica 7. Texturizado				Nombre: Ivan Daniel Cortes Alvarado
+//Fecha de entrega: 28-Septiembre-2026  Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 
@@ -44,7 +45,7 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-							// The MAIN function, from here we start the application and run the game loop
+// Main, from here we start the application and run the game loop
 int main()
 {
 	// Init GLFW
@@ -101,18 +102,63 @@ int main()
 	GLfloat vertices[] =
 	{
 		// Positions            // Colors              // Texture Coords
-		-0.5f, -0.5f, 0.0f,    1.0f, 1.0f,1.0f,		0.0f,0.0f,
-		 0.5f, -0.5f, 0.0f,	   1.0f, 1.0f,1.0f,		1.0f,0.0f,
-		 0.5f,  0.5f, 0.0f,    1.0f, 1.0f,1.0f,	    1.0f,1.0f,
-		-0.5f,  0.5f, 0.0f,    1.0f, 1.0f,1.0f,		0.0f,1.0f,
+		-0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,    0.0f, 0.0f,
+		 0.5f,-0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,    0.0f, 1.0f,
+
+
+		-0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
+		 0.5f,-0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		 0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,    1.0f, 1.0f,
+		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
+
+
+	    -0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
+		 0.5f,-0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		 0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
+		-0.5f,-0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
+
+
+		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
+		 0.5f, 0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,    1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
+
+
+		 0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
+		 0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
+		 0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,    0.0f, 1.0f,
+
+
+		-0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
+		-0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
+		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
 
 		
 	};
 
 	GLuint indices[] =
-	{  // Note that we start from 0!
-		0,1,3,
-		1,2,3
+	{   // Note that we start from 0!
+		// Cara 1
+		0, 1, 3,	1, 2, 3,
+
+		// Cara 2
+		4, 5, 7,	5, 6, 7,
+
+		// Cara 3
+		8, 9, 11,	9, 10, 11,
+
+		// Cara 4
+		12, 13, 15, 13, 14, 15, 
+
+		// Cara 5
+		16, 17, 19, 17, 18, 19,
+
+		// Cara 6
+		20, 21, 23, 21, 22, 23
 	
 	};
 
@@ -146,36 +192,37 @@ int main()
 	GLuint texture1;
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D,texture1);
-	int textureWidth, textureHeight,nrChannels;
-	stbi_set_flip_vertically_on_load(true);
-	//La declaracion se hizo mas abajo
-	//unsigned char *image;
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+	// Parametros de wrapping y filtrado 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	stbi_set_flip_vertically_on_load(true);
+
+	int textureWidth, textureHeight, nrChannels;
+
 	// Diffuse map
-	unsigned char *image = stbi_load("images/perrito.png", &textureWidth, &textureHeight, &nrChannels,0);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	unsigned char *image = stbi_load("images/talavera.jpg", &textureWidth, &textureHeight, &nrChannels,0);
+	
+	//Cuando la imagen no tiene transparencias dejar esta linea
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	//Cuando la imagen tiene transparencia cambia a RBGA (canal alpha)
 	//y cambiar el shader lamp (de fragmentos)
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	
-	//glGenerateMipmap(GL_TEXTURE_2D);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
 	if (image)
 	{
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 		
 		//Cuando la imagen tiene transparencia cambia a RBGA (canal alpha)	
 		//y cambiar el shader lamp (de fragmentos)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -224,7 +271,9 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+		//Cada cara esta formada por dos triangulos y cada triangulo tiene tres indices (6*2*3=36)
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Swap the screen buffers

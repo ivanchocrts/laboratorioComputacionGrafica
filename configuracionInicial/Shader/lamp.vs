@@ -17,5 +17,5 @@ void main()
     TexCoord=inTexCoord;
     
     //Agregar si la imagen tiene transparencias
-    TexCoord=vec2(inTexCoord.x,inTexCoord.y);
+    //TexCoord=vec2(inTexCoord.x,inTexCoord.y);
 }

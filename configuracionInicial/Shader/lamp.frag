@@ -10,6 +10,6 @@ void main()
 {
     outColor = vec4(Color,1.0)*texture(ourTexture, TexCoord);
     //Se agregan si la imagen tiene transparencia
-    if(outColor.a<0.1)
-    discard;
+    //if(outColor.a<0.1)
+    //discard;
 }
