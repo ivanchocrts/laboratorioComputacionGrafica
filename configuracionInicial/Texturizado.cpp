@@ -1,5 +1,5 @@
 //Practica 7. Texturizado				Nombre: Ivan Daniel Cortes Alvarado
-//Fecha de entrega: 28-Septiembre-2026  Numero de cuenta: 316028563
+//Fecha de entrega: 2-Octubre-2026      Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 
@@ -101,43 +101,43 @@ int main()
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] =
 	{
-		// Positions            // Colors              // Texture Coords
-		-0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,    0.0f, 0.0f,
-		 0.5f,-0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,    0.0f, 1.0f,
+		// Positions             // Colors             // Texture Coords (Padding Interno)
 
+		// CARA 1 (Trasera / Z = 0.0) -> Cara 1 punto (Fila 3, Col 1)
+		-0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.010f, 0.265f, 
+		 0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.240f, 0.265f,
+		 0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.240f, 0.490f,
+		-0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.010f, 0.490f,
 
-		-0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
-		 0.5f,-0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		 0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,    1.0f, 1.0f,
-		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
+		// CARA 2 (Frontal / Z = 1.0) -> Cara 6 puntos (Fila 3, Col 3)
+		-0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.265f, 
+		 0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.265f,
+		 0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.490f,
+		-0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.490f,
 
+		// CARA 3 (Inferior / Y = -0.5) -> Cara 4 puntos (Fila 4, Col 3)
+		-0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.010f,
+		 0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.010f,
+		 0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.240f,
+		-0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.240f,
 
-	    -0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
-		 0.5f,-0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		 0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
-		-0.5f,-0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
+		// CARA 4 (Superior / Y = 0.5) -> Cara 3 puntos (Fila 2, Col 3)
+		-0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.510f,
+		 0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.510f,
+		 0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.740f, 0.740f,
+		-0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.510f, 0.740f,
 
+		// CARA 5 (Derecha / X = 0.5) -> Cara 5 puntos (Fila 3, Col 4)
+		 0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.760f, 0.265f, 
+		 0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.990f, 0.265f,
+		 0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.990f, 0.490f,
+		 0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.760f, 0.490f,
 
-		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
-		 0.5f, 0.5f, 1.0f,	   1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,    1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f,	   1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
-
-
-		 0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
-		 0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		 0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
-		 0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,    0.0f, 1.0f,
-
-
-		-0.5f,-0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   0.0f, 0.0f,
-		-0.5f,-0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   1.0f, 0.0f,
-		-0.5f, 0.5f, 1.0f,     1.0f, 1.0f,1.0f,	   1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f,     1.0f, 1.0f,1.0f,	   0.0f, 1.0f,
-
-		
+		 // CARA 6 (Izquierda / X = -0.5) -> Cara 2 puntos (Fila 3, Col 2)
+		 -0.5f, -0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.260f, 0.265f, 
+		 -0.5f, -0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.490f, 0.265f,
+		 -0.5f,  0.5f, 1.0f,      1.0f, 1.0f, 1.0f,     0.490f, 0.490f,
+		 -0.5f,  0.5f, 0.0f,      1.0f, 1.0f, 1.0f,     0.260f, 0.490f,
 	};
 
 	GLuint indices[] =
@@ -206,7 +206,7 @@ int main()
 	int textureWidth, textureHeight, nrChannels;
 
 	// Diffuse map
-	unsigned char *image = stbi_load("images/talavera.jpg", &textureWidth, &textureHeight, &nrChannels,0);
+	unsigned char *image = stbi_load("images/texturaDado.jpg", &textureWidth, &textureHeight, &nrChannels,0);
 	
 	//Cuando la imagen no tiene transparencias dejar esta linea
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -221,7 +221,7 @@ int main()
 		
 		//Cuando la imagen tiene transparencia cambia a RBGA (canal alpha)	
 		//y cambiar el shader lamp (de fragmentos)
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		//lTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
