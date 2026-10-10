@@ -1,7 +1,8 @@
 //Previo 8. Materiales e iluminación        Nombre: Iván Daniel Cortés Alvarado
-//Fecha de entrega: 4 de octubre del 2026   Número de cuenta: 3165028563
+//Fecha de entrega: 9 de octubre del 2026   Número de cuenta: 3165028563
 // Std. Includes
 #include <string>
+#include <cmath>
 
 // GLEW
 #include <GL/glew.h>
@@ -33,16 +34,14 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
 
-// Light attributes
-// Posición inicial Luz 1 (Foco/Sol cuadrado 1 - Viene desde abajo)
-glm::vec3 lightPos1(0.0f, -0.5f, 2.0f);
-// Posición inicial Luz 2 (Rectángulo lateral 2 - Viene desde la derecha)
-glm::vec3 lightPos2(2.5f, 1.2f, 1.0f);
+// Light attributes (Se actualizarán dinámicamente con la órbita vertical)
+glm::vec3 lightPos1(0.0f, 4.5f, 0.0f);
+glm::vec3 lightPos2(0.0f, -4.5f, 0.0f);
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
@@ -58,7 +57,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 8. Materiales e Iluminacion. Ivan Daniel", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 8. Materiales e iluminacion. Ivan Daniel", nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -99,67 +98,11 @@ int main()
     // Load models
     Model red_dog((char*)"Models/RedDog.obj");
     Model papel_picado((char*)"Models/papelpicado.obj");
+    Model sol((char*)"Models/modeloSol.obj");
+    Model luna((char*)"Models/modeloLuna.obj");
+    Model calabaza1((char*)"Models/pumpkin.obj");
+
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-    // Vértices del cubo (utilizados únicamente para renderizar las fuentes de luz)
-    float vertices[] = {
-      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-      -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-       0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-      -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-      -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-      -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-       0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-       0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-       0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-      -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-       0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-      -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    };
-
-    // Configuración de VAO y VBO para los focos rectangulares
-    GLuint VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    // Normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glBindVertexArray(0);
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -177,24 +120,39 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // ----------------------------------------------------
-        // 1. DIBUJAR MODELOS 3D CON ILUMINACIÓN PHONG
-        // ----------------------------------------------------
+        // Movimiento de las fuentes de luz 
+        float radius = 4.5f;               // Radio de la orbita
+        float speed  = 0.2f;               // Velocidad con la que las fuentes de luz iluminaran la escena 
+        float angle  = (float)glfwGetTime() * speed;
+
+        // Para que el movimiento de la orbita sea vertical
+        float solY = radius * sin(angle);
+        float solZ = radius * cos(angle);
+
+        // Para que el sol y la luna queden en lados opuestos
+        float lunaY = -solY;
+        float lunaZ = -solZ;
+
+        // Actualizacion de posiciones de luces para coincidir con el sol y la luna
+        lightPos1 = glm::vec3(0.0f, solY, solZ);
+        lightPos2 = glm::vec3(0.0f, lunaY, lunaZ);
+
+        // DIBUJO DE LOS MODELOS
         lightingShader.Use();
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-        // --- LUZ 1 (Luz desde abajo - Teclas I, K, J, L) ---
+        // Caracteristicas del sol
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.position"), lightPos1.x, lightPos1.y, lightPos1.z);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.9f, 0.9f, 0.9f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 1.0f, 0.95f, 0.8f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.6f, 0.6f, 0.6f);
 
-        // --- LUZ 2 (Luz lateral - Teclas T, G, F, H) ---
+        // Caracterisiticas de la luna
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.position"), lightPos2.x, lightPos2.y, lightPos2.z);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.ambient"), 0.4f, 0.3f, 0.2f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.diffuse"), 1.0f, 0.8f, 0.6f); // Luz cálida
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.specular"), 0.8f, 0.8f, 0.8f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.ambient"), 0.2f, 0.2f, 0.3f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.diffuse"), 0.5f, 0.6f, 0.9f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.specular"), 0.5f, 0.5f, 0.5f);
 
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -206,51 +164,98 @@ int main()
         glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 1.0f, 1.0f, 1.0f);
         glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.8f);
 
-        // --- A) DIBUJAR PERRITO ---
+        // Perrito
         glm::mat4 modelDog(1.0f);
         modelDog = glm::translate(modelDog, glm::vec3(0.0f, 0.0f, 0.0f));
         modelDog = glm::scale(modelDog, glm::vec3(2.0f, 2.0f, 2.0f));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelDog));
         red_dog.Draw(lightingShader);
 
-        // --- B) DIBUJAR PAPEL PICADO CENTRADO ---
+        // Papel picado 
         glm::mat4 modelPapel(1.0f);
         modelPapel = glm::translate(modelPapel, glm::vec3(-0.65f, 1.35f, 0.0f));
         modelPapel = glm::scale(modelPapel, glm::vec3(0.9f, 0.9f, 0.9f));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPapel));
         papel_picado.Draw(lightingShader);
 
-        // ----------------------------------------------------
-        // 2. DIBUJAR FUENTES DE LUZ (RECTÁNGULOS BRIGHT)
-        // ----------------------------------------------------
+        shader.Use();
+
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+
+        // Objetos adicionales: montones de calabzas, cambiar su posicion para que coincidan con las patas del perrito
+        // 1. Calabaza izquierda 1
+        glm::mat4 model_izq1(1.0f);
+        model_izq1 = glm::translate(model_izq1, glm::vec3(0.3006f - 0.85f, -0.0037f - 0.18f, -0.7141f + 0.1f));
+        model_izq1 = glm::rotate(model_izq1, glm::radians(15.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_izq1 = glm::scale(model_izq1, glm::vec3(0.01f, 0.01f, 0.01f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_izq1));
+        calabaza1.Draw(shader);
+
+        // 2. Calabaza izquierda 2
+        glm::mat4 model_izq2(1.0f);
+        model_izq2 = glm::translate(model_izq2, glm::vec3(0.3006f - 1.10f, -0.0037f - 0.18f, -0.7141f - 0.1f));
+        model_izq2 = glm::rotate(model_izq2, glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_izq2 = glm::scale(model_izq2, glm::vec3(0.01f, 0.01f, 0.01f) * 0.85f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_izq2));
+        calabaza1.Draw(shader);
+
+        // 3. Calabaza derecha 1
+        glm::mat4 model_der1(1.0f);
+        model_der1 = glm::translate(model_der1, glm::vec3(0.3006f + 0.90f, -0.0037f - 0.18f, -0.7141f));
+        model_der1 = glm::rotate(model_der1, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_der1 = glm::scale(model_der1, glm::vec3(0.01f, 0.01f, 0.01f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der1));
+        calabaza1.Draw(shader);
+
+        // 4. Calabaza derecha 2
+        glm::mat4 model_der2(1.0f);
+        model_der2 = glm::translate(model_der2, glm::vec3(0.3006f + 1.20f, -0.0037f - 0.18f, -0.7141f - 0.2f));
+        model_der2 = glm::rotate(model_der2, glm::radians(-20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_der2 = glm::scale(model_der2, glm::vec3(0.01f, 0.01f, 0.01f) * 0.9f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der2));
+        calabaza1.Draw(shader);
+
+        // 5. Calabaza derecha 3
+        glm::mat4 model_der3(1.0f);
+        model_der3 = glm::translate(model_der3, glm::vec3(0.3006f + 1.05f, -0.0037f - 0.18f, -0.7141f + 0.25f));
+        model_der3 = glm::rotate(model_der3, glm::radians(80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_der3 = glm::scale(model_der3, glm::vec3(0.01f, 0.01f, 0.01f) * 0.75f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der3));
+        calabaza1.Draw(shader);
+
+        // Para el dibujo del sol y la luna como fuentes de luz
         lampshader.Use();
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        glBindVertexArray(VAO);
+        // Sol
+        glm::mat4 modeloSol(1.0f);
+        modeloSol = glm::translate(modeloSol, lightPos1);
+        modeloSol = glm::rotate(modeloSol, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        modeloSol = glm::scale(modeloSol, glm::vec3(1.0f, 1.0f, 1.0f));
+        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modeloSol));
 
-        // --- FOCO RECTANGULAR 1 (Móvil desde abajo con I, K, J, L) ---
-        glm::mat4 modelLamp1(1.0f);
-        modelLamp1 = glm::translate(modelLamp1, lightPos1);
-        modelLamp1 = glm::scale(modelLamp1, glm::vec3(0.4f, 0.15f, 0.15f)); // Rectángulo horizontal
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelLamp1));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // Para definir su color
+        glUniform3f(glGetUniformLocation(lampshader.Program, "lightColor"), 1.0f, 0.7f, 0.0f);
+        sol.Draw(lampshader);
 
-        // --- FOCO RECTANGULAR 2 (Móvil desde lateral con T, G, F, H) ---
-        glm::mat4 modelLamp2(1.0f);
-        modelLamp2 = glm::translate(modelLamp2, lightPos2);
-        modelLamp2 = glm::scale(modelLamp2, glm::vec3(0.15f, 0.45f, 0.15f)); // Rectángulo vertical
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelLamp2));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        glBindVertexArray(0);
+        // Luna
+        glm::mat4 modeloLuna(1.0f);
+        modeloLuna = glm::translate(modeloLuna, lightPos2);
+        modeloLuna = glm::rotate(modeloLuna, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        modeloLuna = glm::scale(modeloLuna, glm::vec3(0.6f, 0.6f, 0.6f));
+        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modeloLuna));
+
+        // Para definir su color 
+        glUniform3f(glGetUniformLocation(lampshader.Program, "lightColor"), 0.8f, 0.8f, 0.85f);
+        luna.Draw(lampshader);
 
         // Swap the buffers
         glfwSwapBuffers(window);
     }
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
     return 0;
@@ -259,19 +264,18 @@ int main()
 // Moves/alters the camera and light positions based on user input
 void DoMovement()
 {
-    // --- CONTROLES DE CÁMARA (FLECHAS DEL TECLADO) ---
-    if (keys[GLFW_KEY_UP])    camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (keys[GLFW_KEY_DOWN])  camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (keys[GLFW_KEY_LEFT])  camera.ProcessKeyboard(LEFT, deltaTime);
-    if (keys[GLFW_KEY_RIGHT]) camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (keys[GLFW_KEY_UP]    || keys[GLFW_KEY_W]) camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (keys[GLFW_KEY_DOWN]  || keys[GLFW_KEY_S]) camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (keys[GLFW_KEY_LEFT]  || keys[GLFW_KEY_A]) camera.ProcessKeyboard(LEFT, deltaTime);
+    if (keys[GLFW_KEY_RIGHT] || keys[GLFW_KEY_D]) camera.ProcessKeyboard(RIGHT, deltaTime);
 
-    // --- CONTROL DE LUZ 1 (Inferior) -> Teclas I, K, J, L ---
+    // CONTROL MANUAL DE LUZ 1 (Teclas I, K, J, L)
     if (keys[GLFW_KEY_I]) lightPos1.y += 0.01f;
     if (keys[GLFW_KEY_K]) lightPos1.y -= 0.01f;
     if (keys[GLFW_KEY_J]) lightPos1.x -= 0.01f;
     if (keys[GLFW_KEY_L]) lightPos1.x += 0.01f;
 
-    // --- CONTROL DE LUZ 2 (Lateral) -> Teclas T, G, F, H ---
+    // CONTROL MANUAL DE LUZ 2 (Teclas T, G, F, H) 
     if (keys[GLFW_KEY_T]) lightPos2.y += 0.01f;
     if (keys[GLFW_KEY_G]) lightPos2.y -= 0.01f;
     if (keys[GLFW_KEY_F]) lightPos2.x -= 0.01f;
