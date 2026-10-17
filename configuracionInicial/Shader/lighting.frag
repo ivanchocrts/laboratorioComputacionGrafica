@@ -1,6 +1,7 @@
 #version 330 core
 
-#define NUMBER_OF_POINT_LIGHTS 4
+// 6 luces puntuales para los focos del papel picado
+#define NUMBER_OF_POINT_LIGHTS 6
 
 struct Material
 {
@@ -12,7 +13,6 @@ struct Material
 struct DirLight
 {
     vec3 direction;
-    
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -21,11 +21,9 @@ struct DirLight
 struct PointLight
 {
     vec3 position;
-    
     float constant;
     float linear;
     float quadratic;
-    
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -37,11 +35,9 @@ struct SpotLight
     vec3 direction;
     float cutOff;
     float outerCutOff;
-    
     float constant;
     float linear;
     float quadratic;
-    
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -56,7 +52,8 @@ out vec4 color;
 uniform vec3 viewPos;
 uniform DirLight dirLight;
 uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLight;        // Reflector 1: Linterna de la Cámara
+uniform SpotLight spotLightObjeto;  // Reflector 2: Reflector Fijo enfocado al Objeto
 uniform Material material;
 uniform int transparency;
 
@@ -67,26 +64,36 @@ vec3 CalcSpotLight( SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir );
 
 void main( )
 {
-    // Properties
+    // Propiedades de la superficie y vista
     vec3 norm = normalize( Normal );
     vec3 viewDir = normalize( viewPos - FragPos );
     
-    // Directional lighting
+    // 1. Luz Direccional (Ambiente general para todo el pasto y escena)
     vec3 result = CalcDirLight( dirLight, norm, viewDir );
     
-    // Point lights
+    // 2. Luces Puntuales (6 focos a lo largo del papel picado)
     for ( int i = 0; i < NUMBER_OF_POINT_LIGHTS; i++ )
     {
         result += CalcPointLight( pointLights[i], norm, FragPos, viewDir );
     }
     
-    // Spot light
+    // 3. Reflector 1 (Linterna asociada a la cámara / ratón)
     result += CalcSpotLight( spotLight, norm, FragPos, viewDir );
- 	
-    color = vec4( result,texture(material.diffuse, TexCoords).rgb );
-	  if(color.a < 0.1 && transparency==1)
-        discard;
 
+    // 4. Reflector 2 (Luz cenital fija apuntando al objeto principal)
+    result += CalcSpotLight( spotLightObjeto, norm, FragPos, viewDir );
+
+    // Extraer el canal Alpha (.a) de la textura difusa
+    float alpha = texture(material.diffuse, TexCoords).a;
+
+    // Descarte de fragmentos para recortes transparentes
+    if(transparency == 1 && alpha < 0.1)
+    {
+        discard;
+    }
+
+    // Color final sumando las 8 fuentes de luz con la transparencia real
+    color = vec4(result, alpha);
 }
 
 // Calculates the color when using a directional light.
@@ -123,7 +130,8 @@ vec3 CalcPointLight( PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
     
     // Attenuation
     float distance = length( light.position - fragPos );
-    float attenuation = 1.0f / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
+    float attenuationDenom = light.constant + light.linear * distance + light.quadratic * ( distance * distance );
+    float attenuation = 1.0f / max(attenuationDenom, 0.0001f);
     
     // Combine results
     vec3 ambient = light.ambient * vec3( texture( material.diffuse, TexCoords ) );

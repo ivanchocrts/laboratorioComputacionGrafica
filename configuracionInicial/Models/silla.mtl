@@ -1,24 +1,22 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 02.06.2014 22:48:54
+# Blender 4.2.3 LTS MTL File: 'objetosPractica6.blend'
+# www.blender.org
 
-newmtl m_2
-	Ns 18.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.5880 0.5880 0.5880
-	Kd 0.5880 0.5880 0.5880
-	Ks 0.2160 0.2160 0.2160
-	Ke 0.0000 0.0000 0.0000
-	map_Ka texturaSilla.jpg
-	map_Kd texturaSilla.jpg
+newmtl respaldoSilla
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd -s 25 25 25 testuraRespaldo.jpg
 
-newmtl m_1
-	map_Ka testuraRespaldo.jpg
-	map_Kd testuraRespaldo.jpg
-
-newmtl m_3
-	map_Ka testuraRespaldo.jpg
-	map_Kd testuraRespaldo.jpg
+newmtl texturaSilla
+Ns 18.000004
+Ka 1.000000 1.000000 1.000000
+Ks 0.216000 0.216000 0.216000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd texturaSilla.jpg
