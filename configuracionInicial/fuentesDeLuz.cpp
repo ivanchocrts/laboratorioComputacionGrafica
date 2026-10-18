@@ -1,5 +1,5 @@
-// Previo 9. Fuentes de luz                    Alumno: Ivan Daniel Cortes Alvarado
-// Fecha de entrega: 11 de octubre del 2026   Numero de cuenta: 316028563
+// Practica 9. Fuentes de luz                    Alumno: Ivan Daniel Cortes Alvarado
+// Fecha de entrega: 16 de octubre del 2026    Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 #include <string>
