@@ -1,5 +1,5 @@
-// Previo 10. Animacion basica                Nombre: Ivan Daniel Cortes Alvarado	
-// Fecha de entrega: 17 de octubre del 2026   Numero de cuenta: 316028563
+// Practica 10. Animacion basica              Nombre: Ivan Daniel Cortes Alvarado	
+// Fecha de entrega: 19 de octubre del 2026   Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 
@@ -16,6 +16,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/constants.hpp> // Incluido para glm::two_pi
 
 // Load Models
 #include "SOIL2/SOIL2.h"
@@ -47,7 +48,7 @@ glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(0.0f, 2.0f, 0.0f), // La fuente de luz está en Y = 2.0f
+	glm::vec3(0.0f, 2.0f, 0.0f), // Posicion de la fuente de luz
 	glm::vec3(0.0f, 0.0f, 0.0f),
 	glm::vec3(0.0f, 0.0f, 0.0f),
 	glm::vec3(0.0f, 0.0f, 0.0f)
@@ -62,7 +63,7 @@ float vertices[] = {
 	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
 	 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-      0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+	  0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 	  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 	  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 	 -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
@@ -79,7 +80,7 @@ float vertices[] = {
 	  0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
 	  0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
 	  0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-      0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	  0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 	  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
 	 -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
@@ -97,8 +98,7 @@ float vertices[] = {
 	 -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-// Para cambiar la animacion de la luz y hacer que su color cambie a los colores:
-// Rojo, Naranja, Amarillo, Verde, Azul y Morado
+// Arreglo de colores para la luz
 glm::vec3 colors[] = {
 	glm::vec3(1.0f, 0.0f, 0.0f), // Rojo
 	glm::vec3(1.0f, 0.5f, 0.0f), // Naranja
@@ -108,12 +108,15 @@ glm::vec3 colors[] = {
 	glm::vec3(0.5f, 0.0f, 0.5f)  // Morado
 };
 int colorIndex = 0; // Indice de color actual
-glm::vec3 Light1 = colors[0]; // Color de luz inicial (Rojo)
+glm::vec3 Light1 = colors[5]; // Color inicial de la luz (morado)
 
-// Para hacer que la pelota vaya de abajo hacia arriba y viceversa
-float posBallY = 0.0f; // Posición actual en Y
-float animTime = 0.0f; // Tiempo acumulado para oscilación suave
-bool AnimBall = false;
+// Variables para la animación circular
+float animAngle = 0.0f;     // Angulo acumulado para la rotacion
+bool AnimBall = false;      // Bandera activada con la tecla n
+
+// Parametros de la trayectoria circular
+const float RADIUS = 2.0f;               // Radio mas pequeno para mantenerse dentro del pasto
+const float velocidadAnimacion = 1.0f;    // Velocidad del movimiento
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -200,7 +203,7 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.6f, 0.6f, 0.6f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.3f, 0.3f, 0.3f);
 
-		// Point light 1 con el color directo de Light1 sin parpadeos de sin()
+		// Point light 1
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), Light1.x * 0.2f, Light1.y * 0.2f, Light1.z * 0.2f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), Light1.x, Light1.y, Light1.z);
@@ -234,30 +237,85 @@ int main()
 
 		glm::mat4 model(1);
 
-		// Dibujar Piso
+		// Dibujar piso
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Piso.Draw(lightingShader);
 
-		// Dibujar Perrito
-		model = glm::mat4(1);
+		// Dibujar perrito 
+		model = glm::mat4(1.0f);
+		float dogX = RADIUS * cosf(animAngle);
+		float dogZ = RADIUS * sinf(animAngle);
+
+		// 1. Traslacion en el plano XZ
+		model = glm::translate(model, glm::vec3(dogX, 0.0f, dogZ));
+
+		// 2. Rotacion base para que avance mirando a lo largo del circulo
+		model = glm::rotate(model, -animAngle + glm::radians(360.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		// 3. Inclinacion al acercarse a la esfera
+		// cosf(animAngle) vale 1.0 en 0° (primer impacto) y -1.0 en 180° (segundo impacto).
+		float impactoCerca = expf(-10.0f * powf(sinf(animAngle), 2.0f));  // Vale 1.0 cerca de los impactos
+		float anguloInclinacion = 25.0f * cosf(animAngle) * impactoCerca; // Inclinacion en grados (+25° arriba, -25° abajo)
+
+		// Rotacion en X local para que levante la cabeza o baje el cuerpo
+		model = glm::rotate(model, glm::radians(anguloInclinacion), glm::vec3(1.0f, 0.0f, 0.0f));
+
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		Dog.Draw(lightingShader);
 
-		// Dibujar Pelota (Movimiento vertical en Y)
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, posBallY, 0.0f)); // Traslación vertical
+		// Dibujar esfera y animacion efecto de rebote 
+		model = glm::mat4(1.0f);
+
+		// 1. Desfase angular para sincronizar el choque con la cabeza del perrito
+		float offsetImpacto = glm::radians(-14.0f);
+		float ballAngle = -animAngle + offsetImpacto;
+
+		float ballX = RADIUS * cosf(ballAngle);
+		float ballZ = RADIUS * sinf(ballAngle);
+
+		// 2. Normalizar el progreso entre un impacto y otro (de 0.0 a 1.0)
+		float progress = fmodf(animAngle, glm::pi<float>()) / glm::pi<float>();
+
+		// 3. Ajuste de altura Y (para que la esfera toque directamente el piso y rebote con el, no con el aire)
+		float ballRadius = -0.5f; 
+		float bounceHeight = 0.0f;
+
+		// Curva de animacion parabolica para hacer 3 rebotes
+		if (progress < 0.33f)
+		{
+			// Primer rebote (al hacer contacto con el perrito)
+			float t = progress / 0.33f;
+			bounceHeight = 1.5f * (4.0f * t * (1.0f - t));
+		}
+		else if (progress < 0.66f)
+		{
+			// Segundo rebote 
+			float t = (progress - 0.33f) / 0.33f;
+			bounceHeight = 0.6f * (4.0f * t * (1.0f - t));
+		}
+		else
+		{
+			// Tercer rebote
+			float t = (progress - 0.66f) / 0.34f;
+			bounceHeight = 0.2f * (4.0f * t * (1.0f - t));
+		}
+
+		// Posicion final en Y: piso + altura del salto
+		float ballY = ballRadius + bounceHeight;
+
+		// 4. Traslacion
+		model = glm::translate(model, glm::vec3(ballX, ballY, ballZ));
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-
 		Ball.Draw(lightingShader);
 		glDisable(GL_BLEND);
 		glBindVertexArray(0);
 
-		// Dibujar Foco/Lámpara
+		// Dibujar fuente de luz
 		lampShader.Use();
 		modelLoc = glGetUniformLocation(lampShader.Program, "model");
 		viewLoc = glGetUniformLocation(lampShader.Program, "view");
@@ -319,11 +377,11 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	// Cambio de color al presionar la barra de espacio 
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
-		colorIndex = (colorIndex + 1) % 6; // Para llevar a cabo el cambio de color
+		colorIndex = (colorIndex + 1) % 6;
 		Light1 = colors[colorIndex];
 	}
 
-	// Activar/desactivar animación de la pelota
+	// Activar/desactivar animacion con la tecla n
 	if (key == GLFW_KEY_N && action == GLFW_PRESS)
 	{
 		AnimBall = !AnimBall;
@@ -334,14 +392,14 @@ void Animation()
 {
 	if (AnimBall)
 	{
-		animTime += deltaTime * 2.5f; // Controla la velocidad de oscilación
+		// Incrementa el angulo con base en el tiempo y la velocidad
+		animAngle += deltaTime * velocidadAnimacion;
 
-		// Rango: desde Cabeza del perrito (Y = 0.5f) hasta Luz (Y = 2.0f)
-		float minY = 0.0f;
-		float maxY = pointLightPositions[0].y; // Adaptable si mueves la luz
-
-		// Interpolación senoidal suave
-		posBallY = minY + (sin(animTime) + 1.0f) / 2.0f * (maxY - minY);
+		// Reinicia el angulo al completar una vuelta completa (2 * PI)
+		if (animAngle > glm::two_pi<float>())
+		{
+			animAngle -= glm::two_pi<float>();
+		}
 	}
 }
 
