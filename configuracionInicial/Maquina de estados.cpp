@@ -1,5 +1,5 @@
-// Previo 11. Animacion por maquina de estados  Nombre: Ivan Daniel Cortes Alvarado
-// Fecha de entrega: 20 de octubre del 2026     Numero de cuenta: 316028563
+// Practica 11. Animacion por maquina de estados  Nombre: Ivan Daniel Cortes Alvarado
+// Fecha de entrega: 26 de octubre del 2026       Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 
@@ -508,6 +508,7 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	}
 	
 }
+
 void Animation() {
 	if (AnimBall)
 	{
@@ -519,41 +520,154 @@ void Animation() {
 		rotDog -= 0.6f;
 	}
 
-	if (dogAnim == 1) { // Estado de caminar activo
-
-		// 1. Limite del piso: Se detiene cuando llega al borde (ajustar 2.5f según la escala de piso.obj)
+	// Estado 1. Avance del perrito hacia el frente y hasta llegar al borde
+	if (dogAnim == 1) {
 		if (dogPos.z >= 2.30f) {
-			dogAnim = 0; // Detener la máquina de estados
-			// Reiniciar posiciones relativas para que quede estático en pose neutral
-			RLegs = 0.0f;
-			FLegs = 0.0f;
-			head = 0.0f;
-			tail = 0.0f;
+			dogAnim = 2;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
 		}
 		else {
-			// 2. Velocidad de avance reducida (de 0.01f a 0.002f)
-			dogPos.z += 0.001f;
-
-			// 3. Velocidad de extremidades reducida (de 0.3f a 0.1f)
+			dogPos.z += 0.01f;
 			if (!step) {
-				RLegs += 0.1f;
-				FLegs += 0.1f;
-				head += 0.1f;
-				tail += 0.1f;
-				if (RLegs > 15.0f)
-					step = true;
+				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f;
-				FLegs -= 0.1f;
-				head -= 0.1f;
-				tail -= 0.1f;
-				if (RLegs < -15.0f)
-					step = false;
+				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				if (RLegs < -15.0f) step = false;
+			}
+		}
+	}
+
+	// Estado 2. Primer giro a la izquierda. Pasa de 0° a 90°
+	else if (dogAnim == 2) {
+		if (dogRot >= 90.0f) {
+			dogRot = 90.0f;
+			dogAnim = 3;
+		}
+		else {
+			dogRot += 0.5f;
+		}
+	}
+
+	// Estado 3. Avance del perrito hasta el siguiente borde
+	else if (dogAnim == 3) {
+		if (dogPos.x >= 2.30f) {
+			dogAnim = 4;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+		}
+		else {
+			dogPos.x += 0.01f;
+			if (!step) {
+				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				if (RLegs < -15.0f) step = false;
+			}
+		}
+	}
+
+	// Estado 4. Segundo giro a la izquierda. Pasa de 90° a 180°
+	else if (dogAnim == 4) {
+		if (dogRot >= 180.0f) {
+			dogRot = 180.0f;
+			dogAnim = 5;
+		}
+		else {
+			dogRot += 0.5f;
+		}
+	}
+
+	// Estado 5. Avance del perrito hasta el siguiente borde 
+	else if (dogAnim == 5) {
+		if (dogPos.z <= -2.30f) {
+			dogAnim = 6;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+		}
+		else {
+			dogPos.z -= 0.01f;
+			if (!step) {
+				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				if (RLegs < -15.0f) step = false;
+			}
+		}
+	}
+
+	// Estado 6. Tercer giro hacia la izquierda. Pasa de 180° a 270°
+	else if (dogAnim == 6) {
+		if (dogRot >= 270.0f) {
+			dogRot = 270.0f;
+			dogAnim = 7;
+		}
+		else {
+			dogRot += 0.5f;
+		}
+	}
+
+	// Estado 7. Avance del perrito hasta el siguiente borde
+	else if (dogAnim == 7) {
+		if (dogPos.x <= -2.30f) {
+			dogPos.x = -2.30f; 
+			dogAnim = 8;       
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+		}
+		else {
+			dogPos.x -= 0.01f; 
+
+			if (!step) {
+				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				if (RLegs < -15.0f) step = false;
+			}
+		}
+	}
+
+	// Estado 8. Cuarto giro a la izquierda. Pasa 270° a 360° para volver a ver hacia el frente 
+	else if (dogAnim == 8) {
+		if (dogRot >= 360.0f) {
+			dogRot = 45.0f; // Rotacion para que en el ultimo giro la posicion del perrito no sea recta sino en diagonal 
+			dogAnim = 9;    
+		}
+		else {
+			dogRot += 0.5f;
+		}
+	}
+
+	// Estado 9. Deberia ser un giro a la derecha 
+	// Para terminar en la posicion inicial ya sin movimiento de extremidades
+	else if (dogAnim == 9) {
+		if (dogPos.z >= 0.0f && dogPos.x >= 0.0f) {
+			dogPos = glm::vec3(0.0f, 0.0f, 0.0f);
+			dogRot = 0.0f;
+			dogAnim = 0;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+		}
+		else {
+			// Avance simultáneo recto hacia el centro
+			if (dogPos.z < 0.0f) dogPos.z += 0.01f;
+			if (dogPos.x < 0.0f) dogPos.x += 0.01f;
+
+			if (!step) {
+				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				if (RLegs < -15.0f) step = false;
 			}
 		}
 	}
 }
+
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 {
 	if (firstMouse)
