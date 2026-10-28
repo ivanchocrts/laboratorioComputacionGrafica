@@ -1,5 +1,5 @@
 // Practica 11. Animacion por maquina de estados  Nombre: Ivan Daniel Cortes Alvarado
-// Fecha de entrega: 26 de octubre del 2026       Numero de cuenta: 316028563
+// Fecha de entrega: 28 de octubre del 2026       Numero de cuenta: 316028563
 #include <iostream>
 #include <cmath>
 
@@ -54,7 +54,7 @@ glm::vec3 pointLightPositions[] = {
 };
 
 float vertices[] = {
-	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -100,7 +100,7 @@ float vertices[] = {
 
 
 glm::vec3 Light1 = glm::vec3(0);
-//Anim
+// Anim
 float rotBall = 0.0f;
 bool AnimBall = false;
 bool AnimDog = false;
@@ -130,7 +130,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 11. Animacion maquina de estados. Ivan Daniel.", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 11. Animacion maquina de estados. Ivan Daniel.", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -208,7 +208,7 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+		// Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
 		Animation();
@@ -308,14 +308,14 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		DogBody.Draw(lightingShader);
 		
-		//Head
+		// Head
 		model = modelTemp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.093f, 0.208f));
 		model = glm::rotate(model, glm::radians(head), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		HeadDog.Draw(lightingShader);
 		
-		//Tail 
+		// Tail 
 		model = modelTemp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.026f, -0.288f));
 		// La rotacion en cada objeto permite manipular cada elemento respecto a la animacion que se va a hacer
@@ -323,28 +323,28 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); 
 		DogTail.Draw(lightingShader);
 		
-		//Front left Leg
+		// Front left Leg
 		model = modelTemp;
 		model = glm::translate(model, glm::vec3(0.112f, -0.044f, 0.074f));
 		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(-1.0f, 0.0f, 0.0f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		F_LeftLeg.Draw(lightingShader);
 		
-		//Front right Leg
+		// Front right Leg
 		model = modelTemp; 
 		model = glm::translate(model, glm::vec3(-0.111f, -0.055f, 0.074f));
 		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		F_RightLeg.Draw(lightingShader);
 		
-		//Back left Leg
+		// Back left Leg
 		model = modelTemp; 
 		model = glm::translate(model, glm::vec3(0.082f, -0.046, -0.218)); 
 		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); 
 		B_LeftLeg.Draw(lightingShader);
 		
-		//Back right Leg
+		// Back right Leg
 		model = modelTemp; 
 		model = glm::translate(model, glm::vec3(-0.083f, -0.057f, -0.231f));
 		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -353,7 +353,7 @@ int main()
 
 
 		model = glm::mat4(1);
-		glEnable(GL_BLEND); //Activa la funcionalidad para trabajar el canal alfa
+		glEnable(GL_BLEND); // Activa la funcionalidad para trabajar el canal alfa
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
@@ -520,7 +520,10 @@ void Animation() {
 		rotDog -= 0.6f;
 	}
 
-	// Estado 1. Avance del perrito hacia el frente y hasta llegar al borde
+	// Paso o velocidad del bamboleo de las patas (Aumentado de 0.1f a 1.5f para ser mas visible)
+	float legSpeed = 1.5f;
+
+	// Estado 1. Avance del perrito hacia el frente hasta llegar al borde (Eje Z+)
 	if (dogAnim == 1) {
 		if (dogPos.z >= 2.30f) {
 			dogAnim = 2;
@@ -529,28 +532,31 @@ void Animation() {
 		else {
 			dogPos.z += 0.01f;
 			if (!step) {
-				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				RLegs += legSpeed; FLegs += legSpeed; head += 0.5f; tail += 0.5f;
 				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				RLegs -= legSpeed; FLegs -= legSpeed; head -= 0.5f; tail -= 0.5f;
 				if (RLegs < -15.0f) step = false;
 			}
 		}
 	}
 
-	// Estado 2. Primer giro a la izquierda. Pasa de 0° a 90°
+	// Estado 2. Primer giro a la izquierda (0 a 90 grados) con inclinacion de cabeza
 	else if (dogAnim == 2) {
 		if (dogRot >= 90.0f) {
 			dogRot = 90.0f;
+			head = 0.0f;
 			dogAnim = 3;
 		}
 		else {
 			dogRot += 0.5f;
+			// Giro leve de cabeza hacia la izquierda durante el giro
+			head = sin(glm::radians(dogRot * 2.0f)) * 15.0f;
 		}
 	}
 
-	// Estado 3. Avance del perrito hasta el siguiente borde
+	// Estado 3. Avance del perrito hasta el siguiente borde (Eje X+)
 	else if (dogAnim == 3) {
 		if (dogPos.x >= 2.30f) {
 			dogAnim = 4;
@@ -559,28 +565,30 @@ void Animation() {
 		else {
 			dogPos.x += 0.01f;
 			if (!step) {
-				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				RLegs += legSpeed; FLegs += legSpeed; head += 0.5f; tail += 0.5f;
 				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				RLegs -= legSpeed; FLegs -= legSpeed; head -= 0.5f; tail -= 0.5f;
 				if (RLegs < -15.0f) step = false;
 			}
 		}
 	}
 
-	// Estado 4. Segundo giro a la izquierda. Pasa de 90° a 180°
+	// Estado 4. Segundo giro a la izquierda (90 a 180 grados) con inclinacion de cabeza
 	else if (dogAnim == 4) {
 		if (dogRot >= 180.0f) {
 			dogRot = 180.0f;
+			head = 0.0f;
 			dogAnim = 5;
 		}
 		else {
 			dogRot += 0.5f;
+			head = sin(glm::radians(dogRot * 2.0f)) * 15.0f;
 		}
 	}
 
-	// Estado 5. Avance del perrito hasta el siguiente borde 
+	// Estado 5. Avance del perrito hasta el siguiente borde (Eje Z-)
 	else if (dogAnim == 5) {
 		if (dogPos.z <= -2.30f) {
 			dogAnim = 6;
@@ -589,81 +597,94 @@ void Animation() {
 		else {
 			dogPos.z -= 0.01f;
 			if (!step) {
-				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				RLegs += legSpeed; FLegs += legSpeed; head += 0.5f; tail += 0.5f;
 				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				RLegs -= legSpeed; FLegs -= legSpeed; head -= 0.5f; tail -= 0.5f;
 				if (RLegs < -15.0f) step = false;
 			}
 		}
 	}
 
-	// Estado 6. Tercer giro hacia la izquierda. Pasa de 180° a 270°
+	// Estado 6. Tercer giro hacia la izquierda (180 a 270 grados) con inclinacion de cabeza
 	else if (dogAnim == 6) {
 		if (dogRot >= 270.0f) {
 			dogRot = 270.0f;
+			head = 0.0f;
 			dogAnim = 7;
 		}
 		else {
 			dogRot += 0.5f;
+			head = sin(glm::radians(dogRot * 2.0f)) * 15.0f;
 		}
 	}
 
-	// Estado 7. Avance del perrito hasta el siguiente borde
+	// Estado 7. Avance del perrito hasta el siguiente borde (Eje X-)
 	else if (dogAnim == 7) {
 		if (dogPos.x <= -2.30f) {
-			dogPos.x = -2.30f; 
-			dogAnim = 8;       
+			dogPos.x = -2.30f;
+			dogAnim = 8;
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
 		}
 		else {
-			dogPos.x -= 0.01f; 
-
+			dogPos.x -= 0.01f;
 			if (!step) {
-				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				RLegs += legSpeed; FLegs += legSpeed; head += 0.5f; tail += 0.5f;
 				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				RLegs -= legSpeed; FLegs -= legSpeed; head -= 0.5f; tail -= 0.5f;
 				if (RLegs < -15.0f) step = false;
 			}
 		}
 	}
 
-	// Estado 8. Cuarto giro a la izquierda. Pasa 270° a 360° para volver a ver hacia el frente 
+	// Estado 8. Cuarto giro a la izquierda (270 a 360/405 grados) dejando rotacion en 45°
 	else if (dogAnim == 8) {
-		if (dogRot >= 360.0f) {
-			dogRot = 45.0f; // Rotacion para que en el ultimo giro la posicion del perrito no sea recta sino en diagonal 
-			dogAnim = 9;    
+		if (dogRot >= 405.0f) {
+			dogRot = 45.0f; 
+			head = 0.0f;
+			dogAnim = 9;
 		}
 		else {
 			dogRot += 0.5f;
+			head = sin(glm::radians(dogRot * 2.0f)) * 15.0f;
 		}
 	}
 
-	// Estado 9. Ultimo giro para terminar en la posicion de inicion
-	// Agregar un movimiento en la cabeza al momento de hacer los giros   
+	// Estado 9. Retorno al origen (0,0,0) caminando en diagonal (45 grados)
 	else if (dogAnim == 9) {
 		if (dogPos.z >= 0.0f && dogPos.x >= 0.0f) {
 			dogPos = glm::vec3(0.0f, 0.0f, 0.0f);
-			dogRot = 0.0f;
-			dogAnim = 0;
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			dogAnim = 10; // Pasa al ultimo giro a la derecha
 		}
 		else {
-			// Avance simultaneo recto hacia el centro
 			if (dogPos.z < 0.0f) dogPos.z += 0.01f;
 			if (dogPos.x < 0.0f) dogPos.x += 0.01f;
 
 			if (!step) {
-				RLegs += 0.1f; FLegs += 0.1f; head += 0.1f; tail += 0.1f;
+				RLegs += legSpeed; FLegs += legSpeed; head += 0.5f; tail += 0.5f;
 				if (RLegs > 15.0f) step = true;
 			}
 			else {
-				RLegs -= 0.1f; FLegs -= 0.1f; head -= 0.1f; tail -= 0.1f;
+				RLegs -= legSpeed; FLegs -= legSpeed; head -= 0.5f; tail -= 0.5f;
 				if (RLegs < -15.0f) step = false;
 			}
+		}
+	}
+
+	// Estado 10. Ultimo giro a la derecha (45° a 0°) para alineacion final
+	else if (dogAnim == 10) {
+		if (dogRot <= 0.0f) {
+			dogRot = 0.0f;
+			dogAnim = 0; // Fin de la secuencia de estados
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+		}
+		else {
+			dogRot -= 0.5f; // Decremento para girar a la derecha
+			head = -sin(glm::radians(dogRot * 4.0f)) * 10.0f; // Movimiento reactivo de la cabeza
 		}
 	}
 }
