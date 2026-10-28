@@ -642,8 +642,8 @@ void Animation() {
 		}
 	}
 
-	// Estado 9. Deberia ser un giro a la derecha 
-	// Para terminar en la posicion inicial ya sin movimiento de extremidades
+	// Estado 9. Ultimo giro para terminar en la posicion de inicion
+	// Agregar un movimiento en la cabeza al momento de hacer los giros   
 	else if (dogAnim == 9) {
 		if (dogPos.z >= 0.0f && dogPos.x >= 0.0f) {
 			dogPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -652,7 +652,7 @@ void Animation() {
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
 		}
 		else {
-			// Avance simultáneo recto hacia el centro
+			// Avance simultaneo recto hacia el centro
 			if (dogPos.z < 0.0f) dogPos.z += 0.01f;
 			if (dogPos.x < 0.0f) dogPos.x += 0.01f;
 
