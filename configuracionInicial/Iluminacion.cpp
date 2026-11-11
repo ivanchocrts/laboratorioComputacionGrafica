@@ -1,8 +1,8 @@
-//Previo 8. Materiales e iluminación        Nombre: Iván Daniel Cortés Alvarado
-//Fecha de entrega: 9 de octubre del 2026   Número de cuenta: 3165028563
-// Std. Includes
+// Iluminacion.cpp
+#include <iostream>
 #include <string>
 #include <cmath>
+#include <vector>
 
 // GLEW
 #include <GL/glew.h>
@@ -10,45 +10,199 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
-// GL includes
-#include "Shader.h"
-#include "Camera.h"
-#include "Model.h"
+// Other Libs
+#include "SOIL2/SOIL2.h"
+#include "stb_image.h"
 
 // GLM Mathematics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// Other Libs
-#include "SOIL2/SOIL2.h"
-#include "stb_image.h"
+// GL includes
+#include "Shader.h"
+#include "Camera.h"
+#include "Model.h"
+#include "Texture.h"
 
-// Properties
+using namespace std;
+
+// Dimensiones de ventana
 const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
-// Function prototypes
+// Prototipos
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
+void AnimationGhost();
+void saveFrameGhost(void);
+void resetElementsGhost(void);
+void interpolationGhost(void);
 
-// Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
+// Cámara
+Camera camera(glm::vec3(0.0f, 2.0f, 10.0f));
 bool keys[1024];
-GLfloat lastX = 400, lastY = 300;
+GLfloat lastX = WIDTH / 2.0f;
+GLfloat lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
 
-// Light attributes (Se actualizarán dinámicamente con la órbita vertical)
-glm::vec3 lightPos1(0.0f, 4.5f, 0.0f);
-glm::vec3 lightPos2(0.0f, -4.5f, 0.0f);
+// Luz direccional (sol fijo)
+glm::vec3 dirLightDir(-0.3f, -1.0f, -0.2f);
 
+// DeltaTime
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
+// ============================================================
+// VARIABLES DE ANIMACIÓN DEL FANTASMA (Keyframes)
+// ============================================================
+float ghostPosX = 0.0f, ghostPosY = 0.0f, ghostPosZ = 0.0f; // Posición inicial al ras del suelo
+float rotGhostX = 0.0f, rotGhostZ = 0.0f; // Rotaciones en ejes X y Z
+float leftArmGhost = 0.0f;      // Rotación brazo izquierdo (caminar)
+float rightArmGhost = 0.0f;     // Rotación brazo derecho (caminar)
+float veloGhost = 0.0f;         // Movimiento del velo
+
+#define MAX_FRAMES 9
+int i_max_steps = 190;
+int i_curr_steps = 0;
+
+typedef struct _frameGhost {
+    float ghostPosX, ghostPosY, ghostPosZ;
+    float incX, incY, incZ;
+    float rotGhostX, rotGhostXInc;
+    float rotGhostZ, rotGhostZInc;
+    float leftArmGhost, leftArmGhostInc;
+    float rightArmGhost, rightArmGhostInc;
+    float veloGhost, veloGhostInc;
+} FRAME_GHOST;
+
+FRAME_GHOST KeyFrameGhost[MAX_FRAMES];
+int FrameIndexGhost = 0;
+bool playGhost = false;
+int playIndexGhost = 0;
+
+void saveFrameGhost(void)
+{
+    printf("Frame Ghost %d guardado | PosZ: %.3f | RotX: %.1f | RotZ: %.1f\n", FrameIndexGhost, ghostPosZ, rotGhostX, rotGhostZ);
+
+    KeyFrameGhost[FrameIndexGhost].ghostPosX = ghostPosX;
+    KeyFrameGhost[FrameIndexGhost].ghostPosY = ghostPosY;
+    KeyFrameGhost[FrameIndexGhost].ghostPosZ = ghostPosZ;
+    KeyFrameGhost[FrameIndexGhost].rotGhostX = rotGhostX;
+    KeyFrameGhost[FrameIndexGhost].rotGhostZ = rotGhostZ;
+    KeyFrameGhost[FrameIndexGhost].leftArmGhost = leftArmGhost;
+    KeyFrameGhost[FrameIndexGhost].rightArmGhost = rightArmGhost;
+    KeyFrameGhost[FrameIndexGhost].veloGhost = veloGhost;
+
+    FrameIndexGhost++;
+}
+
+void resetElementsGhost(void)
+{
+    ghostPosX = KeyFrameGhost[0].ghostPosX;
+    ghostPosY = KeyFrameGhost[0].ghostPosY;
+    ghostPosZ = KeyFrameGhost[0].ghostPosZ;
+    rotGhostX = KeyFrameGhost[0].rotGhostX;
+    rotGhostZ = KeyFrameGhost[0].rotGhostZ;
+    leftArmGhost = KeyFrameGhost[0].leftArmGhost;
+    rightArmGhost = KeyFrameGhost[0].rightArmGhost;
+    veloGhost = KeyFrameGhost[0].veloGhost;
+}
+
+void interpolationGhost(void)
+{
+    KeyFrameGhost[playIndexGhost].incX = (KeyFrameGhost[playIndexGhost + 1].ghostPosX - KeyFrameGhost[playIndexGhost].ghostPosX) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].incY = (KeyFrameGhost[playIndexGhost + 1].ghostPosY - KeyFrameGhost[playIndexGhost].ghostPosY) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].incZ = (KeyFrameGhost[playIndexGhost + 1].ghostPosZ - KeyFrameGhost[playIndexGhost].ghostPosZ) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].rotGhostXInc = (KeyFrameGhost[playIndexGhost + 1].rotGhostX - KeyFrameGhost[playIndexGhost].rotGhostX) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].rotGhostZInc = (KeyFrameGhost[playIndexGhost + 1].rotGhostZ - KeyFrameGhost[playIndexGhost].rotGhostZ) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].leftArmGhostInc = (KeyFrameGhost[playIndexGhost + 1].leftArmGhost - KeyFrameGhost[playIndexGhost].leftArmGhost) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].rightArmGhostInc = (KeyFrameGhost[playIndexGhost + 1].rightArmGhost - KeyFrameGhost[playIndexGhost].rightArmGhost) / i_max_steps;
+    KeyFrameGhost[playIndexGhost].veloGhostInc = (KeyFrameGhost[playIndexGhost + 1].veloGhost - KeyFrameGhost[playIndexGhost].veloGhost) / i_max_steps;
+}
+
+void AnimationGhost(void)
+{
+    if (playGhost)
+    {
+        if (i_curr_steps >= i_max_steps)
+        {
+            playIndexGhost++;
+            if (playIndexGhost > FrameIndexGhost - 2)
+            {
+                printf("Animacion del fantasma terminada\n");
+                playIndexGhost = 0;
+                playGhost = false;
+            }
+            else
+            {
+                i_curr_steps = 0;
+                interpolationGhost();
+            }
+        }
+        else
+        {
+            ghostPosX += KeyFrameGhost[playIndexGhost].incX;
+            ghostPosY += KeyFrameGhost[playIndexGhost].incY;
+            ghostPosZ += KeyFrameGhost[playIndexGhost].incZ;
+            rotGhostX += KeyFrameGhost[playIndexGhost].rotGhostXInc;
+            rotGhostZ += KeyFrameGhost[playIndexGhost].rotGhostZInc;
+            leftArmGhost += KeyFrameGhost[playIndexGhost].leftArmGhostInc;
+            rightArmGhost += KeyFrameGhost[playIndexGhost].rightArmGhostInc;
+            veloGhost += KeyFrameGhost[playIndexGhost].veloGhostInc;
+
+            i_curr_steps++;
+        }
+    }
+}
+
+// Cubo unitario para las lámparas
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
+
 int main()
 {
-    // Init GLFW
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -56,8 +210,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    // Create a GLFWwindow object
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 8. Materiales e iluminacion. Ivan Daniel", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecto final. Computacion grafica", nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -69,7 +222,6 @@ int main()
     glfwMakeContextCurrent(window);
     glfwGetFramebufferSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
 
-    // Set the required callback functions
     glfwSetKeyCallback(window, KeyCallback);
     glfwSetCursorPosCallback(window, MouseCallback);
 
@@ -80,225 +232,344 @@ int main()
         return EXIT_FAILURE;
     }
 
-    // Define the viewport dimensions
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // OpenGL options
+    // Opciones globales OpenGL
     glEnable(GL_DEPTH_TEST);
-
-    // === ACTIVAR BLENDING / TRANSPARENCIA EN OPENGL ===
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Setup and compile our shaders
-    Shader shader("Shader/modelLoading.vs", "Shader/modelLoading.frag");
-    Shader lampshader("Shader/lamp.vs", "Shader/lamp.frag");
+    // Shaders
     Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
+    Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
+    Shader skyboxShader("Shader/SkyBox.vs", "Shader/SkyBox.frag");
 
-    // Load models
-    Model red_dog((char*)"Models/RedDog.obj");
-    Model papel_picado((char*)"Models/papelpicado.obj");
-    Model sol((char*)"Models/modeloSol.obj");
-    Model luna((char*)"Models/modeloLuna.obj");
-    Model calabaza1((char*)"Models/pumpkin.obj");
+    // Inicialización de Keyframes del Fantasma modificada
+    for (int i = 0; i < MAX_FRAMES; i++)
+    {
+        KeyFrameGhost[i].ghostPosX = 0.0f;
+        KeyFrameGhost[i].ghostPosY = 0.0f; // Inicializado al nivel del suelo
+        KeyFrameGhost[i].ghostPosZ = 0.0f;
+        KeyFrameGhost[i].incX = 0.0f;
+        KeyFrameGhost[i].incY = 0.0f;
+        KeyFrameGhost[i].incZ = 0.0f;
+        KeyFrameGhost[i].rotGhostX = 0.0f;
+        KeyFrameGhost[i].rotGhostXInc = 0.0f;
+        KeyFrameGhost[i].rotGhostZ = 0.0f;
+        KeyFrameGhost[i].rotGhostZInc = 0.0f;
+        KeyFrameGhost[i].leftArmGhost = 0.0f;
+        KeyFrameGhost[i].leftArmGhostInc = 0.0f;
+        KeyFrameGhost[i].rightArmGhost = 0.0f;
+        KeyFrameGhost[i].rightArmGhostInc = 0.0f;
+        KeyFrameGhost[i].veloGhost = 0.0f;
+        KeyFrameGhost[i].veloGhostInc = 0.0f;
+    }
 
-    glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    // ============================================================
+    // SKYBOX: vértices del cubo
+    // ============================================================
+    GLfloat skyboxVertices[] = {
+        -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f
+    };
 
-    // Game loop
+    GLuint skyboxVBO, skyboxVAO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glBindVertexArray(0);
+
+    // ============================================================
+    // SKYBOX: carga del cubemap
+    // ============================================================
+    vector<const GLchar*> faces;
+    faces.push_back("SkyBox/derecha.jpg");
+    faces.push_back("SkyBox/izquierda.jpg");
+    faces.push_back("SkyBox/arriba.jpg");
+    faces.push_back("SkyBox/abajo.jpg");
+    faces.push_back("SkyBox/frente.jpg");
+    faces.push_back("SkyBox/atras.jpg");
+
+    GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
+
+    // Modelos Ambientales
+    Model calaverasArboles((char*)"Models/calaverasArboles.obj");
+    Model castilloIsla((char*)"Models/castilloIsla.obj");
+    Model carpasMesas((char*)"Models/carpasMesas.obj");
+    Model postesPapelPicado((char*)"Models/postesCamellon.obj");
+    Model flores((char*)"Models/flores.obj");
+    Model ofrendas((char*)"Models/ofrendas.obj");
+    Model agua((char*)"Models/aguaReescalada.obj");
+
+    // Modelos del Fantasma
+    Model torsoGhost((char*)"Models/torso.obj");
+    Model cabezaGhost((char*)"Models/cabeza.obj");
+    Model veloGhost((char*)"Models/velo.obj");
+    Model brazoIzquierdoGhost((char*)"Models/brazoIzquierdo.obj");
+    Model brazoDerechoGhost((char*)"Models/brazoDerecho.obj");
+
+    lightingShader.Use();
+    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
+    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.specular"), 1);
+
+    skyboxShader.Use();
+    glUniform1i(glGetUniformLocation(skyboxShader.Program, "skybox"), 0);
+
+    glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+
+    // ============================================================
+    // BUCLE PRINCIPAL
+    // ============================================================
     while (!glfwWindowShouldClose(window))
     {
-        // Set frame time
-        GLfloat currentFrame = glfwGetTime();
+        GLfloat currentFrame = (GLfloat)glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // Check and call events
         glfwPollEvents();
         DoMovement();
+        AnimationGhost();
 
-        // Clear the colorbuffer
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Movimiento de las fuentes de luz 
-        float radius = 4.5f;               // Radio de la orbita
-        float speed  = 0.2f;               // Velocidad con la que las fuentes de luz iluminaran la escena 
-        float angle  = (float)glfwGetTime() * speed;
-
-        // Para que el movimiento de la orbita sea vertical
-        float solY = radius * sin(angle);
-        float solZ = radius * cos(angle);
-
-        // Para que el sol y la luna queden en lados opuestos
-        float lunaY = -solY;
-        float lunaZ = -solZ;
-
-        // Actualizacion de posiciones de luces para coincidir con el sol y la luna
-        lightPos1 = glm::vec3(0.0f, solY, solZ);
-        lightPos2 = glm::vec3(0.0f, lunaY, lunaZ);
-
-        // DIBUJO DE LOS MODELOS
-        lightingShader.Use();
-        GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-
-        // Caracteristicas del sol
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.position"), lightPos1.x, lightPos1.y, lightPos1.z);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 1.0f, 0.95f, 0.8f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.6f, 0.6f, 0.6f);
-
-        // Caracterisiticas de la luna
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.position"), lightPos2.x, lightPos2.y, lightPos2.z);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.ambient"), 0.2f, 0.2f, 0.3f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.diffuse"), 0.5f, 0.6f, 0.9f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.specular"), 0.5f, 0.5f, 0.5f);
-
         glm::mat4 view = camera.GetViewMatrix();
+
+        lightingShader.Use();
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPos"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-        // Propiedades del material
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.8f, 0.8f, 0.8f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 1.0f, 1.0f, 1.0f);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.8f);
+        // Iluminación
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), dirLightDir.x, dirLightDir.y, dirLightDir.z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.6f, 0.6f, 0.55f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 1.2f, 1.15f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
-        // Perrito
-        glm::mat4 modelDog(1.0f);
-        modelDog = glm::translate(modelDog, glm::vec3(0.0f, 0.0f, 0.0f));
-        modelDog = glm::scale(modelDog, glm::vec3(2.0f, 2.0f, 2.0f));
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelDog));
-        red_dog.Draw(lightingShader);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 0.0f, 0.0f, 0.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.007f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.0002f);
 
-        // Papel picado 
-        glm::mat4 modelPapel(1.0f);
-        modelPapel = glm::translate(modelPapel, glm::vec3(-0.65f, 1.35f, 0.0f));
-        modelPapel = glm::scale(modelPapel, glm::vec3(0.9f, 0.9f, 0.9f));
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPapel));
-        papel_picado.Draw(lightingShader);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"), 0.0f, 0.0f, 0.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.09f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.032f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(12.5f)));
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
 
-        shader.Use();
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        GLint modelLoc = glGetUniformLocation(lightingShader.Program, "model");
 
+        // Dibujo de escenario
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "isWater"), 0);
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 
-        // Objetos adicionales: montones de calabzas, cambiar su posicion para que coincidan con las patas del perrito
-        // 1. Calabaza izquierda 1
-        glm::mat4 model_izq1(1.0f);
-        model_izq1 = glm::translate(model_izq1, glm::vec3(0.3006f - 0.85f, -0.0037f - 0.18f, -0.7141f + 0.1f));
-        model_izq1 = glm::rotate(model_izq1, glm::radians(15.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_izq1 = glm::scale(model_izq1, glm::vec3(0.01f, 0.01f, 0.01f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_izq1));
-        calabaza1.Draw(shader);
+        glm::mat4 modelCalaveras(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCalaveras));
+        calaverasArboles.Draw(lightingShader);
 
-        // 2. Calabaza izquierda 2
-        glm::mat4 model_izq2(1.0f);
-        model_izq2 = glm::translate(model_izq2, glm::vec3(0.3006f - 1.10f, -0.0037f - 0.18f, -0.7141f - 0.1f));
-        model_izq2 = glm::rotate(model_izq2, glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_izq2 = glm::scale(model_izq2, glm::vec3(0.01f, 0.01f, 0.01f) * 0.85f);
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_izq2));
-        calabaza1.Draw(shader);
+        glm::mat4 modelCastillo(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCastillo));
+        castilloIsla.Draw(lightingShader);
 
-        // 3. Calabaza derecha 1
-        glm::mat4 model_der1(1.0f);
-        model_der1 = glm::translate(model_der1, glm::vec3(0.3006f + 0.90f, -0.0037f - 0.18f, -0.7141f));
-        model_der1 = glm::rotate(model_der1, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_der1 = glm::scale(model_der1, glm::vec3(0.01f, 0.01f, 0.01f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der1));
-        calabaza1.Draw(shader);
+        glm::mat4 modelCarpas(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCarpas));
+        carpasMesas.Draw(lightingShader);
 
-        // 4. Calabaza derecha 2
-        glm::mat4 model_der2(1.0f);
-        model_der2 = glm::translate(model_der2, glm::vec3(0.3006f + 1.20f, -0.0037f - 0.18f, -0.7141f - 0.2f));
-        model_der2 = glm::rotate(model_der2, glm::radians(-20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_der2 = glm::scale(model_der2, glm::vec3(0.01f, 0.01f, 0.01f) * 0.9f);
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der2));
-        calabaza1.Draw(shader);
+        glm::mat4 modelPostesPapelPicado(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelPostesPapelPicado));
+        postesPapelPicado.Draw(lightingShader);
 
-        // 5. Calabaza derecha 3
-        glm::mat4 model_der3(1.0f);
-        model_der3 = glm::translate(model_der3, glm::vec3(0.3006f + 1.05f, -0.0037f - 0.18f, -0.7141f + 0.25f));
-        model_der3 = glm::rotate(model_der3, glm::radians(80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_der3 = glm::scale(model_der3, glm::vec3(0.01f, 0.01f, 0.01f) * 0.75f);
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_der3));
-        calabaza1.Draw(shader);
+        glm::mat4 modelFlores(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelFlores));
+        flores.Draw(lightingShader);
 
-        // Para el dibujo del sol y la luna como fuentes de luz
-        lampshader.Use();
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glm::mat4 modelOfrendas(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelOfrendas));
+        ofrendas.Draw(lightingShader);
 
-        // Sol
-        glm::mat4 modeloSol(1.0f);
-        modeloSol = glm::translate(modeloSol, lightPos1);
-        modeloSol = glm::rotate(modeloSol, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        modeloSol = glm::scale(modeloSol, glm::vec3(1.0f, 1.0f, 1.0f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modeloSol));
+        // Agua
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "isWater"), 1);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "uTime"), (float)glfwGetTime());
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "waveAmplitude"), 0.08f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "waveFrequency"), 2.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "waveSpeed"), 1.2f);
+        glUniform2f(glGetUniformLocation(lightingShader.Program, "waterSpeed"), 0.0f, 0.0f);
 
-        // Para definir su color
-        glUniform3f(glGetUniformLocation(lampshader.Program, "lightColor"), 1.0f, 0.7f, 0.0f);
-        sol.Draw(lampshader);
+        glm::mat4 modelAgua(1.0f);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelAgua));
+        agua.Draw(lightingShader);
 
+        // ========================================================
+        // DIBUJADO DEL FANTASMA (Estructura Jerárquica Modificada)
+        // ========================================================
+        float floatOffset = sin((float)glfwGetTime() * 3.0f) * 0.15f;
+        float currentPosY = ghostPosY + floatOffset;
+        float s = 0.0625f;
 
-        // Luna
-        glm::mat4 modeloLuna(1.0f);
-        modeloLuna = glm::translate(modeloLuna, lightPos2);
-        modeloLuna = glm::rotate(modeloLuna, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        modeloLuna = glm::scale(modeloLuna, glm::vec3(0.6f, 0.6f, 0.6f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modeloLuna));
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 
-        // Para definir su color 
-        glUniform3f(glGetUniformLocation(lampshader.Program, "lightColor"), 0.8f, 0.8f, 0.85f);
-        luna.Draw(lampshader);
+        // 1. MATRIZ BASE (Posición global + Flotación + Rotaciones X y Z + ESCALA GENERAL)
+        glm::mat4 modelGhost = glm::mat4(1.0f);
+        modelGhost = glm::translate(modelGhost, glm::vec3(ghostPosX, currentPosY, ghostPosZ));
+        modelGhost = glm::rotate(modelGhost, glm::radians(rotGhostX), glm::vec3(1.0f, 0.0f, 0.0f)); // Giro X
+        modelGhost = glm::rotate(modelGhost, glm::radians(rotGhostZ), glm::vec3(0.0f, 0.0f, 1.0f)); // Giro Z
+        modelGhost = glm::scale(modelGhost, glm::vec3(s, s, s));
 
-        // Swap the buffers
+        // 2. TORSO (Raíz)
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelGhost));
+        torsoGhost.Draw(lightingShader);
+
+        // 3. CABEZA (Fija, atada al movimiento del torso sin separarse)
+        glm::mat4 modelHead = modelGhost;
+        modelHead = glm::translate(modelHead, glm::vec3(0.0f, 0.20f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelHead));
+        cabezaGhost.Draw(lightingShader);
+
+        // 4. VELO
+        glm::mat4 modelVelo = modelGhost;
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelVelo));
+        veloGhost.Draw(lightingShader);
+
+        // 5. BRAZO IZQUIERDO (Rotación hacia adelante para simular caminar)
+        glm::mat4 modelArmLeft = modelGhost;
+        modelArmLeft = glm::translate(modelArmLeft, glm::vec3(0.35f, 0.15f, 0.0f));
+        modelArmLeft = glm::rotate(modelArmLeft, glm::radians(leftArmGhost), glm::vec3(1.0f, 0.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelArmLeft));
+        brazoIzquierdoGhost.Draw(lightingShader);
+
+        // 6. BRAZO DERECHO (Rotación hacia adelante para simular caminar)
+        glm::mat4 modelArmRight = modelGhost;
+        modelArmRight = glm::translate(modelArmRight, glm::vec3(-0.35f, 0.15f, 0.0f));
+        modelArmRight = glm::rotate(modelArmRight, glm::radians(rightArmGhost), glm::vec3(1.0f, 0.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelArmRight));
+        brazoDerechoGhost.Draw(lightingShader);
+
+        glDisable(GL_BLEND);
+
+        // --------------------------------------------------------
+        // SKYBOX
+        // --------------------------------------------------------
+        glDepthFunc(GL_LEQUAL);
+        skyboxShader.Use();
+        glUniform1i(glGetUniformLocation(skyboxShader.Program, "skybox"), 1);
+
+        glm::mat4 viewSky = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+        glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(viewSky));
+        glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+
+        glBindVertexArray(skyboxVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+
+        glDepthFunc(GL_LESS);
+
         glfwSwapBuffers(window);
     }
+
+    // Limpieza
+    glDeleteVertexArrays(1, &skyboxVAO);
+    glDeleteBuffers(1, &skyboxVBO);
+    glDeleteTextures(1, &cubemapTexture);
 
     glfwTerminate();
     return 0;
 }
 
-// Moves/alters the camera and light positions based on user input
 void DoMovement()
 {
-    if (keys[GLFW_KEY_UP]    || keys[GLFW_KEY_W]) camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (keys[GLFW_KEY_DOWN]  || keys[GLFW_KEY_S]) camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (keys[GLFW_KEY_LEFT]  || keys[GLFW_KEY_A]) camera.ProcessKeyboard(LEFT, deltaTime);
-    if (keys[GLFW_KEY_RIGHT] || keys[GLFW_KEY_D]) camera.ProcessKeyboard(RIGHT, deltaTime);
+    // Movimiento vertical (Arriba / Abajo)
+    if (keys[GLFW_KEY_F]) ghostPosY += 0.005f;
+    if (keys[GLFW_KEY_V]) ghostPosY -= 0.005f;
 
-    // CONTROL MANUAL DE LUZ 1 (Teclas I, K, J, L)
-    if (keys[GLFW_KEY_I]) lightPos1.y += 0.01f;
-    if (keys[GLFW_KEY_K]) lightPos1.y -= 0.01f;
-    if (keys[GLFW_KEY_J]) lightPos1.x -= 0.01f;
-    if (keys[GLFW_KEY_L]) lightPos1.x += 0.01f;
+    // Movimiento Adelante / Atrás (Eje Z)
+    if (keys[GLFW_KEY_T]) ghostPosZ -= 0.005f; // Hacia adelante
+    if (keys[GLFW_KEY_G]) ghostPosZ += 0.005f; // Hacia atrás
 
-    // CONTROL MANUAL DE LUZ 2 (Teclas T, G, F, H) 
-    if (keys[GLFW_KEY_T]) lightPos2.y += 0.01f;
-    if (keys[GLFW_KEY_G]) lightPos2.y -= 0.01f;
-    if (keys[GLFW_KEY_F]) lightPos2.x -= 0.01f;
-    if (keys[GLFW_KEY_H]) lightPos2.x += 0.01f;
+    // Rotaciones generales en X y Z
+    if (keys[GLFW_KEY_Z]) rotGhostX -= 1.0f;    // Girar sobre X
+    if (keys[GLFW_KEY_X]) rotGhostX += 1.0f;
+    if (keys[GLFW_KEY_C]) rotGhostZ -= 1.0f;    // Girar sobre Z
+    if (keys[GLFW_KEY_B]) rotGhostZ += 1.0f;
+
+    // Articulaciones de los brazos (Como caminar, sobre el eje X)
+    if (keys[GLFW_KEY_H]) leftArmGhost += 1.0f;
+    if (keys[GLFW_KEY_J]) leftArmGhost -= 1.0f;
+    if (keys[GLFW_KEY_Y]) rightArmGhost += 1.0f;
+    if (keys[GLFW_KEY_U]) rightArmGhost -= 1.0f;
+
+    // Controles de Cámara
+    if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])    camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])  camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])  camera.ProcessKeyboard(LEFT, deltaTime);
+    if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT]) camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
-// Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
-    {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-
     if (key >= 0 && key < 1024)
     {
-        if (action == GLFW_PRESS)
+        if (action == GLFW_PRESS)          keys[key] = true;
+        else if (action == GLFW_RELEASE)   keys[key] = false;
+    }
+
+    if (action == GLFW_PRESS)
+    {
+        if (key == GLFW_KEY_I)
         {
-            keys[key] = true;
+            if (FrameIndexGhost < MAX_FRAMES)
+            {
+                saveFrameGhost();
+            }
+            else
+            {
+                printf("Limite de KeyFrames de fantasma alcanzado (%d)\n", MAX_FRAMES);
+            }
         }
-        else if (action == GLFW_RELEASE)
+
+        if (key == GLFW_KEY_O)
         {
-            keys[key] = false;
+            if (playGhost == false && (FrameIndexGhost > 1))
+            {
+                playIndexGhost = 0;
+                i_curr_steps = 0;
+                resetElementsGhost();
+                interpolationGhost();
+                playGhost = true;
+                printf("Iniciando reproduccion de animacion del fantasma (%d frames)\n", FrameIndexGhost);
+            }
+            else
+            {
+                playGhost = false;
+                printf("Animacion de fantasma pausada/detenida\n");
+            }
+        }
+
+        if (key == GLFW_KEY_ESCAPE)
+        {
+            glfwSetWindowShouldClose(window, GL_TRUE);
         }
     }
 }
@@ -307,16 +578,16 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 {
     if (firstMouse)
     {
-        lastX = xPos;
-        lastY = yPos;
+        lastX = (GLfloat)xPos;
+        lastY = (GLfloat)yPos;
         firstMouse = false;
     }
 
-    GLfloat xOffset = xPos - lastX;
-    GLfloat yOffset = lastY - yPos;
+    GLfloat xOffset = (GLfloat)xPos - lastX;
+    GLfloat yOffset = lastY - (GLfloat)yPos;
 
-    lastX = xPos;
-    lastY = yPos;
+    lastX = (GLfloat)xPos;
+    lastY = (GLfloat)yPos;
 
     camera.ProcessMouseMovement(xOffset, yOffset);
 }

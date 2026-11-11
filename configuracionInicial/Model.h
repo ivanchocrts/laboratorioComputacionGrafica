@@ -51,6 +51,9 @@ private:
 	// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void loadModel(string path)
 	{
+		// === NUEVA LÍNEA PARA DEPURACIÓN ===
+		std::cout << "========== [INICIANDO CARGA DE MODELO]: " << path << " ==========" << std::endl;
+
 		// Read file via ASSIMP
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals);

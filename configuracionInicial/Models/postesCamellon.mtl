@@ -1,0 +1,846 @@
+# Blender 4.2.3 LTS MTL File: 'objetosProyecto.blend'
+# www.blender.org
+
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd patasSilla.jpg
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.005
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.006
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.013
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl Material.015
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd naranjaFlores.png
+
+newmtl papel1_amarillo
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.013
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.015
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.016
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.017
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.018
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.019
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.020
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel1_amarillo.021
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel1_amarillo.png
+map_d papel1_amarillo.png
+map_Bump -bm 1.500000 papel1_normal.png
+
+newmtl papel2_rosa
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.013
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.015
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.016
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.017
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.018
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.019
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.020
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel2_rosa.021
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel2_rosa.png
+map_d papel2_rosa.png
+map_Bump -bm 1.500000 papel2_normal.png
+
+newmtl papel3_naranja
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.013
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.015
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.016
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.017
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.018
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.019
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.020
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl papel3_naranja.021
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd papel3_naranja.png
+map_d papel3_naranja.png
+map_Bump -bm 1.500000 papel3_normal.png
+
+newmtl texturaFlor.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.005
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.006
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png
+
+newmtl texturaFlor.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png

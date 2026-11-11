@@ -1,22 +1,22 @@
-# Blender 4.2.3 LTS MTL File: 'None'
+# Blender 4.2.3 LTS MTL File: 'untitled.blend'
 # www.blender.org
 
-newmtl barcaza_Decimated:defaultMat1
-Ns 200.000000
+newmtl Material.002
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd trajinera.jpg
+map_Kd naranjaFlores.png
 
-newmtl lambert2
-Ns 200.000000
+newmtl texturaFlor
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
-d 1.000000
 illum 2
-map_Kd cartel.jpg
+map_Kd texturaFlorEsfera.png
+map_d texturaFlorEsfera.png

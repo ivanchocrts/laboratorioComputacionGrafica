@@ -1,5 +1,4 @@
-// Practica 12. Animacion por keyframes      Nombre: Ivan Daniel Cortes Alvarado
-// Fecha de entrega: 28 de octubre del 2026  Numero de cuenta: 316028563
+// Keyframes.cpp
 #include <iostream>
 #include <cmath>
 
@@ -204,7 +203,7 @@ int main()
     // Init GLFW
     glfwInit();
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 12. Animacion por keyframes. Ivan Daniel", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica adicional. Skybox. Ivan Daniel", nullptr, nullptr);
 
     if (nullptr == window)
     {
